@@ -48,4 +48,9 @@ public class ProductController {
         return "redirect:/product/list";
     }
 
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable String id) {
+        service.deleteById(id);
+        return "redirect:/product/list";
+    }
 }
