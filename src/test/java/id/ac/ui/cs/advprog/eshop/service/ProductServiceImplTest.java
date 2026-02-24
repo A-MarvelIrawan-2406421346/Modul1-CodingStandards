@@ -5,7 +5,6 @@ import id.ac.ui.cs.advprog.eshop.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,14 +14,9 @@ class ProductServiceImplTest {
     private ProductServiceImpl productService;
 
     @BeforeEach
-    void setUp() throws Exception {
-        productService = new ProductServiceImpl();
-
-
+    void setUp() {
         ProductRepository repo = new ProductRepository();
-        Field repoField = ProductServiceImpl.class.getDeclaredField("productRepository");
-        repoField.setAccessible(true);
-        repoField.set(productService, repo);
+        productService = new ProductServiceImpl(repo);
     }
 
 

@@ -69,4 +69,82 @@ class ProductRepositoryTest {
 
         assertFalse(productIterator.hasNext());
     }
+
+    @Test
+    void testCreateGeneratesIdWhenIdNull() {
+        Product product = new Product();
+        product.setProductId(null);
+        product.setProductName("Produk Tanpa ID");
+        product.setProductQuantity(1);
+
+        Product created = productRepository.create(product);
+
+        assertNotNull(created.getProductId());
+        assertFalse(created.getProductId().isEmpty());
+    }
+
+
+    @Test
+    void testCreateGeneratesIdWhenIdEmpty() {
+        Product product = new Product();
+        product.setProductId("");
+        product.setProductName("Produk ID String Kosong");
+        product.setProductQuantity(2);
+
+        Product created = productRepository.create(product);
+
+        assertNotNull(created.getProductId());
+        assertNotEquals("", created.getProductId());
+    }
+
+    @Test
+    void testFindByIdFoundAndNotFound() {
+        Product product = new Product();
+        product.setProductId("id-1");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        Product found = productRepository.findById("id-1");
+        assertNotNull(found);
+        assertEquals("id-1", found.getProductId());
+
+        Product notFound = productRepository.findById("ga-ada");
+        assertNull(notFound);
+    }
+
+    @Test
+    void testDeleteById() {
+        String productId = "id-to-delete";
+
+        // Setup data
+        Product product = new Product();
+        product.setProductId(productId);
+        product.setProductName("Barang Dihapus");
+        product.setProductQuantity(10);
+        productRepository.create(product);
+
+        assertNotNull(productRepository.findById(productId));
+
+        productRepository.deleteById(productId);
+
+        assertNull(productRepository.findById(productId));
+
+        Iterator<Product> iterator = productRepository.findAll();
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    void testDeleteByNonExistentId() {
+        // Setup data
+        Product product = new Product();
+        product.setProductId("id-aman");
+        product.setProductName("Barang Aman");
+        product.setProductQuantity(10);
+        productRepository.create(product);
+
+        assertDoesNotThrow(() -> productRepository.deleteById("id-ngasal"));
+
+        assertNotNull(productRepository.findById("id-aman"));
+    }
 }

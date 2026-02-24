@@ -1,4 +1,5 @@
 plugins {
+    pmd
     java
     jacoco
     id("org.springframework.boot") version "4.0.2"
