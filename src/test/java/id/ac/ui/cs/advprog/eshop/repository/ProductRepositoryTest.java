@@ -115,18 +115,20 @@ class ProductRepositoryTest {
 
     @Test
     void testDeleteById() {
+        String productId = "id-to-delete";
+
         // Setup data
         Product product = new Product();
-        product.setProductId("id-to-delete");
+        product.setProductId(productId);
         product.setProductName("Barang Dihapus");
         product.setProductQuantity(10);
         productRepository.create(product);
 
-        assertNotNull(productRepository.findById("id-to-delete"));
+        assertNotNull(productRepository.findById(productId));
 
-        productRepository.deleteById("id-to-delete");
+        productRepository.deleteById(productId);
 
-        assertNull(productRepository.findById("id-to-delete"));
+        assertNull(productRepository.findById(productId));
 
         Iterator<Product> iterator = productRepository.findAll();
         assertFalse(iterator.hasNext());
