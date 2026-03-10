@@ -14,7 +14,7 @@ public class Payment {
         this.id = id;
         this.method = method;
         this.paymentData = paymentData;
-        this.status = determineStatus(); 
+        this.status = determineStatus();
     }
 
     private String determineStatus() {
