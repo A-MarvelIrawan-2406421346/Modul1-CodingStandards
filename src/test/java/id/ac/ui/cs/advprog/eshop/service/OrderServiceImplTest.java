@@ -138,5 +138,5 @@ class OrderServiceTest {
                 order.getAuthor().toLowerCase());
         assertTrue(results.isEmpty());
     }
-    
+
 }
