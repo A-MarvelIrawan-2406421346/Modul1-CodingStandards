@@ -8,16 +8,19 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PaymentTest {
+    private static final String KEY_VOUCHER_CODE = "voucherCode";
+    private static final String METHOD_VOUCHER = "VOUCHER";
+    private static final String STATUS_REJECTED = "REJECTED";
 
     @Test
     void testCreatePaymentVoucherSuccess() {
         Map<String, String> paymentData = new HashMap<>();
         // 16 chars, starts with ESHOP, exactly 8 numerics
-        paymentData.put("voucherCode", "ESHOP1234ABC5678");
-        Payment payment = new Payment("1", "VOUCHER", paymentData);
+        paymentData.put(KEY_VOUCHER_CODE, "ESHOP1234ABC5678");
+        Payment payment = new Payment("1", METHOD_VOUCHER, paymentData);
 
         assertEquals("1", payment.getId());
-        assertEquals("VOUCHER", payment.getMethod());
+        assertEquals(METHOD_VOUCHER, payment.getMethod());
         assertEquals("SUCCESS", payment.getStatus());
         assertEquals(paymentData, payment.getPaymentData());
     }
@@ -25,28 +28,28 @@ class PaymentTest {
     @Test
     void testCreatePaymentVoucherRejectedNot16Chars() {
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOP123");
-        Payment payment = new Payment("2", "VOUCHER", paymentData);
+        paymentData.put(KEY_VOUCHER_CODE, "ESHOP123");
+        Payment payment = new Payment("2", METHOD_VOUCHER, paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(STATUS_REJECTED, payment.getStatus());
     }
 
     @Test
     void testCreatePaymentVoucherRejectedNotStartWithEshop() {
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "DISCO1234ABC5678");
-        Payment payment = new Payment("3", "VOUCHER", paymentData);
+        paymentData.put(KEY_VOUCHER_CODE, "DISCO1234ABC5678");
+        Payment payment = new Payment("3", METHOD_VOUCHER, paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(STATUS_REJECTED, payment.getStatus());
     }
 
     @Test
     void testCreatePaymentVoucherRejectedNot8Numerics() {
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOP12ABCDEFGHX"); // Hanya 2 angka
-        Payment payment = new Payment("4", "VOUCHER", paymentData);
+        paymentData.put(KEY_VOUCHER_CODE, "ESHOP12ABCDEFGHX");
+        Payment payment = new Payment("4", METHOD_VOUCHER, paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(STATUS_REJECTED, payment.getStatus());
     }
 
     @Test
@@ -66,7 +69,7 @@ class PaymentTest {
         paymentData.put("referenceCode", "REF12345");
         Payment payment = new Payment("6", "BANK_TRANSFER", paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(STATUS_REJECTED, payment.getStatus());
     }
 
     @Test
@@ -76,6 +79,6 @@ class PaymentTest {
         paymentData.put("referenceCode", null);
         Payment payment = new Payment("7", "BANK_TRANSFER", paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(STATUS_REJECTED, payment.getStatus());
     }
 }

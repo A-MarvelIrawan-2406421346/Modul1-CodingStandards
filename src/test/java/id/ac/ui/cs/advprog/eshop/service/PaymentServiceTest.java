@@ -25,7 +25,6 @@ import static org.mockito.Mockito.*;
 class PaymentServiceTest {
 
     private static final String METHOD_VOUCHER = "VOUCHER";
-
     @InjectMocks
     PaymentServiceImpl paymentService;
 
@@ -56,19 +55,19 @@ class PaymentServiceTest {
 
     @Test
     void testAddPayment() {
-        doReturn(new Payment("1", "VOUCHER", paymentData)).when(paymentRepository).save(any(Payment.class));
+        doReturn(new Payment("1", METHOD_VOUCHER, paymentData)).when(paymentRepository).save(any(Payment.class));
 
-        Payment result = paymentService.addPayment(order, "VOUCHER", paymentData);
+        Payment result = paymentService.addPayment(order, METHOD_VOUCHER, paymentData);
 
         verify(paymentRepository, times(1)).save(any(Payment.class));
-        assertEquals("VOUCHER", result.getMethod());
+        assertEquals(METHOD_VOUCHER, result.getMethod());
         assertEquals(order.getId(), result.getPaymentData().get("orderId")); // Harus menyimpan orderId
     }
 
     @Test
     void testSetStatusSuccess() {
         paymentData.put("orderId", order.getId());
-        Payment payment = new Payment("1", "VOUCHER", paymentData);
+        Payment payment = new Payment("1", METHOD_VOUCHER, paymentData);
 
         doReturn(payment).when(paymentRepository).save(any(Payment.class));
         doReturn(order).when(orderRepository).findById(order.getId());
@@ -83,7 +82,7 @@ class PaymentServiceTest {
     @Test
     void testSetStatusRejected() {
         paymentData.put("orderId", order.getId());
-        Payment payment = new Payment("1", "VOUCHER", paymentData);
+        Payment payment = new Payment("1", METHOD_VOUCHER, paymentData);
 
         doReturn(payment).when(paymentRepository).save(any(Payment.class));
         doReturn(order).when(orderRepository).findById(order.getId());
@@ -98,7 +97,7 @@ class PaymentServiceTest {
 
     @Test
     void testGetPaymentAndGetAllPayments() {
-        Payment payment = new Payment("1", "VOUCHER", paymentData);
+        Payment payment = new Payment("1", METHOD_VOUCHER, paymentData);
         doReturn(payment).when(paymentRepository).findById("1");
 
         List<Payment> paymentList = new ArrayList<>();
