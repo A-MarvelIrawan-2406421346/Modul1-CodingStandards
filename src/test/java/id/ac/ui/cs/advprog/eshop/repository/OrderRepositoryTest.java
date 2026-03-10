@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.repository;
 
+import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
+import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -103,7 +105,7 @@ class OrderRepositoryTest {
     void testFindAllByAuthorIfAllLowercase() {
         orderRepository.save(orders.get(1));
 
-        List<Order> findResult = orderRepository.findAllByAuthor(
+        List<Order> orderList = orderRepository.findAllByAuthor(
                 orders.get(1).getAuthor().toLowerCase());
         assertTrue(orderList.isEmpty());
     }
