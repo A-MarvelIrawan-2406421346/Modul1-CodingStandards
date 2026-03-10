@@ -22,9 +22,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
-
         paymentData.put("orderId", order.getId());
-
         Payment payment = new Payment(UUID.randomUUID().toString(), method, paymentData);
         paymentRepository.save(payment);
         return payment;
@@ -35,19 +33,23 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus(status);
         paymentRepository.save(payment);
 
-        String orderId = payment.getPaymentData().get("orderId");
+        updateOrderStatus(payment.getPaymentData().get("orderId"), status);
+
+        return payment;
+    }
+
+    private void updateOrderStatus(String orderId, String paymentStatus) {
         if (orderId != null) {
             Order order = orderRepository.findById(orderId);
             if (order != null) {
-                if ("SUCCESS".equals(status)) {
+                if ("SUCCESS".equals(paymentStatus)) {
                     order.setStatus("SUCCESS");
-                } else if ("REJECTED".equals(status)) {
+                } else if ("REJECTED".equals(paymentStatus)) {
                     order.setStatus("FAILED");
                 }
                 orderRepository.save(order);
             }
         }
-        return payment;
     }
 
     @Override
