@@ -11,6 +11,12 @@ public class PaymentRepository {
     private List<Payment> paymentData = new ArrayList<>();
 
     public Payment save(Payment payment) {
+        for (int i = 0; i < paymentData.size(); i++) {
+            if (paymentData.get(i).getId().equals(payment.getId())) {
+                paymentData.set(i, payment);
+                return payment;
+            }
+        }
         paymentData.add(payment);
         return payment;
     }
