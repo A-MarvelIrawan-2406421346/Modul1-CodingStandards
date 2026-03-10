@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.NoSuchElementException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ class OrderServiceTest {
     OrderRepository orderRepository;
 
     List<Order> orders;
+
+    private static final String INVALID_ORDER_ID = "zczc";
 
     @BeforeEach
     void setUp() {
@@ -93,10 +96,10 @@ class OrderServiceTest {
 
     @Test
     void testUpdateStatusInvalidOrderId() {
-        doReturn(null).when(orderRepository).findById("zczc");
+        doReturn(null).when(orderRepository).findById(INVALID_ORDER_ID);
 
         assertThrows(NoSuchElementException.class,
-                () -> orderService.updateStatus("zczc", OrderStatus.SUCCESS.getValue()));
+                () -> orderService.updateStatus(INVALID_ORDER_ID, OrderStatus.SUCCESS.getValue()));
 
         verify(orderRepository, times(0)).save(any(Order.class));
     }
@@ -112,8 +115,8 @@ class OrderServiceTest {
 
     @Test
     void testFindByIdIfIdNotFound() {
-        doReturn(null).when(orderRepository).findById("zczc");
-        assertNull(orderService.findById("zczc"));
+        doReturn(null).when(orderRepository).findById(INVALID_ORDER_ID);
+        assertNull(orderService.findById(INVALID_ORDER_ID));
     }
 
     @Test
@@ -132,11 +135,10 @@ class OrderServiceTest {
     void testFindAllByAuthorIfAllLowercase() {
         Order order = orders.get(1);
         doReturn(new ArrayList<Order>()).when(orderRepository)
-                .findAllByAuthor(order.getAuthor().toLowerCase());
+                .findAllByAuthor(order.getAuthor().toLowerCase(Locale.ROOT));
 
         List<Order> results = orderService.findAllByAuthor(
-                order.getAuthor().toLowerCase());
+                order.getAuthor().toLowerCase(Locale.ROOT));
         assertTrue(results.isEmpty());
     }
-
 }

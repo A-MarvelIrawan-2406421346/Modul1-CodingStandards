@@ -5,6 +5,10 @@ import java.util.Map;
 
 @Getter
 public class Payment {
+    public static final String STATUS_REJECTED = "REJECTED";
+    public static final String STATUS_SUCCESS = "SUCCESS";
+    public static final String METHOD_VOUCHER = "VOUCHER";
+    public static final String METHOD_BANK = "BANK";
     private String id;
     private String method;
     private String status;
@@ -18,12 +22,12 @@ public class Payment {
     }
 
     private String determineStatus() {
-        if ("VOUCHER".equals(method)) {
-            return validateVoucherCode(paymentData.get("voucherCode")) ? "SUCCESS" : "REJECTED";
+        if (METHOD_VOUCHER.equals(method)) {
+            return validateVoucherCode(paymentData.get("voucherCode")) ? STATUS_SUCCESS : STATUS_REJECTED;
         } else if ("BANK_TRANSFER".equals(method)) {
             return validateBankTransfer(paymentData.get("bankName"), paymentData.get("referenceCode")) ? "SUCCESS" : "REJECTED";
         }
-        return "REJECTED";
+        return STATUS_REJECTED;
     }
 
     private boolean validateVoucherCode(String voucherCode) {

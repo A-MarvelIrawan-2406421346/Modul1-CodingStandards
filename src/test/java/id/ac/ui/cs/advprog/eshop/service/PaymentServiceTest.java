@@ -24,6 +24,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceTest {
 
+    private static final String METHOD_VOUCHER = "VOUCHER";
+
     @InjectMocks
     PaymentServiceImpl paymentService;
 

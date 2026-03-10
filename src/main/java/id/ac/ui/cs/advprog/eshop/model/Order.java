@@ -30,17 +30,22 @@ public class Order {
         }
     }
 
-    public Order(String id, List<Product> products, Long orderTime, String author, String status) {
+    public Order(String id, List<Product> products, long orderTime, String author, String status) {
         this(id, products, orderTime, author);
-
-        this.setStatus(status);
+        if (status.equals("WAITING_PAYMENT") || status.equals("FAILED") ||
+                status.equals("SUCCESS") || status.equals("CANCELLED")) {
+            this.status = status;
+        } else {
+            throw new IllegalArgumentException("Invalid status: " + status);
+        }
     }
 
     public void setStatus(String status) {
-        if (OrderStatus.contains(status)) {
+        if (status.equals("WAITING_PAYMENT") || status.equals("FAILED") ||
+                status.equals("SUCCESS") || status.equals("CANCELLED")) {
             this.status = status;
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid status: " + status);
         }
     }
 }

@@ -36,13 +36,15 @@ class PaymentControllerTest {
 
     private Payment payment;
 
+    private static final String PAYMENT_ID = "pay-1";
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(paymentController).build();
 
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP1234ABC5678");
-        payment = new Payment("pay-1", "VOUCHER", paymentData);
+        payment = new Payment(PAYMENT_ID, "VOUCHER", paymentData);
     }
 
     @Test
@@ -54,9 +56,9 @@ class PaymentControllerTest {
 
     @Test
     void testPaymentDetailByIdPage() throws Exception {
-        when(paymentService.getPayment("pay-1")).thenReturn(payment);
+        when(paymentService.getPayment(PAYMENT_ID)).thenReturn(payment);
 
-        mockMvc.perform(get("/payment/detail/pay-1"))
+        mockMvc.perform(get("/payment/detail/" + PAYMENT_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("payment/paymentDetail"))
                 .andExpect(model().attributeExists("payment"));
@@ -76,9 +78,9 @@ class PaymentControllerTest {
 
     @Test
     void testAdminPaymentDetailPage() throws Exception {
-        when(paymentService.getPayment("pay-1")).thenReturn(payment);
+        when(paymentService.getPayment(PAYMENT_ID)).thenReturn(payment);
 
-        mockMvc.perform(get("/payment/admin/detail/pay-1"))
+        mockMvc.perform(get("/payment/admin/detail/" + PAYMENT_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("payment/paymentAdminDetail"))
                 .andExpect(model().attributeExists("payment"));
@@ -86,9 +88,9 @@ class PaymentControllerTest {
 
     @Test
     void testAdminSetPaymentStatusPost() throws Exception {
-        when(paymentService.getPayment("pay-1")).thenReturn(payment);
+        when(paymentService.getPayment(PAYMENT_ID)).thenReturn(payment);
 
-        mockMvc.perform(post("/payment/admin/set-status/pay-1").param("status", "SUCCESS"))
+        mockMvc.perform(post("/payment/admin/set-status/" + PAYMENT_ID).param("status", "SUCCESS"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/payment/admin/list"));
     }

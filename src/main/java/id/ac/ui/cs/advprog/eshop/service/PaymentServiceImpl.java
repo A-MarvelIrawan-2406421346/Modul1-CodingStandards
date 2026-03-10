@@ -14,11 +14,18 @@ import java.util.UUID;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private static final String STATUS_SUCCESS = "SUCCESS";
+    private static final String STATUS_REJECTED = "REJECTED";
+    private static final String STATUS_FAILED = "FAILED";
+
+    private final PaymentRepository paymentRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    private OrderRepository orderRepository;
+    public PaymentServiceImpl(PaymentRepository paymentRepository, OrderRepository orderRepository) {
+        this.paymentRepository = paymentRepository;
+        this.orderRepository = orderRepository;
+    }
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
@@ -42,10 +49,10 @@ public class PaymentServiceImpl implements PaymentService {
         if (orderId != null) {
             Order order = orderRepository.findById(orderId);
             if (order != null) {
-                if ("SUCCESS".equals(paymentStatus)) {
-                    order.setStatus("SUCCESS");
-                } else if ("REJECTED".equals(paymentStatus)) {
-                    order.setStatus("FAILED");
+                if (STATUS_SUCCESS.equals(paymentStatus)) {
+                    order.setStatus(STATUS_SUCCESS);
+                } else if (STATUS_REJECTED.equals(paymentStatus)) {
+                    order.setStatus(STATUS_FAILED);
                 }
                 orderRepository.save(order);
             }
